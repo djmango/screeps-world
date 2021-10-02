@@ -10,10 +10,13 @@ const randomProperty = function (obj) {
     return obj[keys[ keys.length * Math.random() << 0]];
 };
 
+const randomElement = function (array) {return array[Math.floor(Math.random() * array.length)]};
+
 const sumObjectValues = obj => Object.values(obj).reduce((a, b) => a + b);
 
 module.exports = {
     getRandomIntInclusive,
     randomProperty,
+    randomElement,
     sumObjectValues
 }
