@@ -1,24 +1,32 @@
 var roleHarvester = {
-
-    /** @param {Creep} creep **/
     run: function(creep) {
-        if(creep.store.getFreeCapacity() > 0) {
-            var sources = creep.room.find(FIND_SOURCES);
-            if(creep.harvest(sources[0]) == ERR_NOT_IN_RANGE) {
-                creep.moveTo(sources[0], {visualizePathStyle: {stroke: '#ffaa00'}});
+        // dumping energy
+        if (creep.memory.working == true && creep.carry.energy == 0) {
+            // going crazy and stupid
+            creep.memory.working = false;
+        }
+        // harvester full and gotta go home
+        else if (creep.memory.working == false && creep.carry.energy == creep.carryCapacity) {
+            // go home dumb bitch
+            creep.memory.working = true;
+        }
+
+        // transfer energy to spawn or die
+        if (creep.memory.working == true) {
+            // if spawn not in range
+            if (creep.transfer(Game.spawns.Home, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                // now do it bitch
+                creep.moveTo(Game.spawns.Home);
             }
         }
+        // creep needa mine
         else {
-            var targets = creep.room.find(FIND_STRUCTURES, {
-                filter: (structure) => {
-                    return (structure.structureType == STRUCTURE_EXTENSION || structure.structureType == STRUCTURE_SPAWN) &&
-                        structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
-                }
-            });
-            if(targets.length > 0) {
-                if(creep.transfer(targets[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(targets[0], {visualizePathStyle: {stroke: '#ffffff'}});
-                }
+            // find closest woman
+            var source = creep.pos.findClosestByPath(FIND_SOURCES_ACTIVE);
+            // do the robot, if she doesnt respond
+            if (creep.harvest(source) == ERR_NOT_IN_RANGE) {
+                // do it again
+                creep.moveTo(source);
             }
         }
     }
