@@ -9,19 +9,11 @@ var roleRepairer = require('role.repairer');
 // out of (sum of object) creeps, how many do you want to be the specified role?
 const jobDistribution = {
     'harvester': 5,
-    'upgrader': 2,
-    'builder': 2,
+    'upgrader': 1,
+    'builder': 1,
     'repairer': 1
 }
 const jobs = Object.keys(jobDistribution)
-
-// helper functions, should move this to a utils at some point
-// const randomProperty = function (obj) {
-//     var keys = Object.keys(obj);
-//     return obj[keys[ keys.length * Math.random() << 0]];
-// };
-
-// const sumObjectValues = obj => Object.values(obj).reduce((a, b) => a + b);
 
 function calculateJobDist(job) {
     // check that the job provided is valid
@@ -41,6 +33,19 @@ module.exports.loop = function () {
         if (!Game.creeps[name]) {
             delete Memory.creeps[name];
             console.log('Clearing non-existing creep memory:', name);
+        }
+    }
+
+    // validate memory of rooms
+    for (const i in Game.rooms) {
+        if (!Game.rooms[i].memory.sources) Game.rooms[i].memory.sources = {}
+        
+        // get up to date room ids
+        let roomIds = Object.values(Game.rooms[i].find(FIND_SOURCES)).map(a => a.id);
+
+        // if we find that the memory does not have all sources in room, create those entries
+        if (!utils.equals(roomIds, Object.keys(Game.rooms[i].memory.sources))) {
+            roomIds.forEach(roomId => Game.rooms[i].memory.sources[roomId] = {'miners': []})
         }
     }
 
@@ -73,7 +78,7 @@ module.exports.loop = function () {
                 console.log(`Reassigning a creep to ${job}`)
             }
         }
-    })
+    });
 
     // spawn if we are close to capacity
     if (Game.spawns['Home'].store.getFreeCapacity(RESOURCE_ENERGY) < 50) {
