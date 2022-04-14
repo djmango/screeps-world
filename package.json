@@ -1,0 +1,25 @@
+{
+  "name": "screeps-world",
+  "version": "1.0.0",
+  "description": "la mente vola",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/djmango/screeps-world.git"
+  },
+  "keywords": [
+    "screeps"
+  ],
+  "author": "djmango",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/djmango/screeps-world/issues"
+  },
+  "homepage": "https://github.com/djmango/screeps-world#readme",
+  "dependencies": {
+    "grunt-screeps": "^1.5.0"
+  }
+}
